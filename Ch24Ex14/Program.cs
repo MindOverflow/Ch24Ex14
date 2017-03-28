@@ -8,16 +8,6 @@ namespace Ch24Ex14
 
         private static int[] _data;
 
-        private static void DisplayData(int v, ParallelLoopState pls)
-        {
-            if (v < 0)
-            {
-                pls.Break();
-            }
-            WriteLine($"Значение: {v}");
-        }
-
-
         private static void Main()
         {
             WriteLine("Основной поток выполнения запущен.");
@@ -32,7 +22,17 @@ namespace Ch24Ex14
 
             _data[100] = -10;
 
-            var parallelLoopResult = Parallel.ForEach(_data, DisplayData);
+            var parallelLoopResult = Parallel.ForEach(
+                _data,
+                (v, pls) =>
+                {
+                    if (v < 0)
+                    {
+                        pls.Break();
+                    }
+                    WriteLine($"Значение: {v}");
+                }
+                );
 
             if (!parallelLoopResult.IsCompleted)
             {
